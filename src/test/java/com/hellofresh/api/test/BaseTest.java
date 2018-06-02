@@ -31,10 +31,12 @@ public class BaseTest {
     static final String COUNTRY_SUFFIX_PATTERN = "iso2code/%s";
     static final String ADD_COUNTRY = "http://services.groupkt.com/country/post/";
     private static final String NONEXISTENT_COUNTRY_MESSAGE_PATTERN = "No matching country found for requested code [%s].";
+    static final int SUCCESSFUL_CODE = 200;
 
     ListCountry getListCountry(String url) throws IOException {
         log.info("Getting countries JSON.");
         Response response = get(url);
+        verifyResponseCode(response, SUCCESSFUL_CODE);
         JSONObject jsonResponse = new JSONObject(response.asString());
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(jsonResponse.toString(), ListCountry.class);
@@ -43,6 +45,7 @@ public class BaseTest {
     SingleCountry getSingleCountryResponse(String url) throws IOException {
         log.info("Getting single country JSON.");
         Response response = get(url);
+        verifyResponseCode(response, SUCCESSFUL_CODE);
         JSONObject jsonResponse = new JSONObject(response.asString());
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(jsonResponse.toString(), SingleCountry.class);
@@ -81,9 +84,9 @@ public class BaseTest {
                 String.format(NONEXISTENT_COUNTRY_MESSAGE_PATTERN, alpha2_code));
     }
 
-    void verifyPostResponse(Response response){
-        log.info("Validate response code.");
-        Assert.assertEquals(response.getStatusCode(), 200);
+    void verifyResponseCode(Response response, int code){
+        log.info("Validate response code: " + code);
+        Assert.assertEquals(response.getStatusCode(), code);
     }
 
     @DataProvider(name = "getCountriesPresence")

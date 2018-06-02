@@ -13,6 +13,6 @@ public class AddCountry extends BaseTest {
     public void addCountry(ArrayList<String> countryInfo) throws JsonProcessingException {
         Country country = new Country(countryInfo.get(0), countryInfo.get(1), countryInfo.get(2));
         Response response = addCountry(ADD_COUNTRY, country);
-        verifyPostResponse(response);
+        verifyResponseCode(response, SUCCESSFUL_CODE);
     }
 }
